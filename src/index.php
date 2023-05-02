@@ -158,6 +158,9 @@
 
         echo $names[1];
 
+        //count number of elements in an array
+        echo count($names);
+
         //Associative Arrays (key => value)
         $people = array(
             "David"=>"27",
@@ -376,9 +379,6 @@
         /* $_ENV
         */
         
-        /* $_COOKIE
-        */
-        
         /* $_POST
            • in body of HTTP request
            • no limit in amount of data, supports multipart binary files
@@ -391,7 +391,7 @@
         */
      
     ?>
-    <!-- form - action is a php page, that runs after the form is submitted -->
+    <!-- form - action is a php page, that runs after the form is submitted (without action set, it runs itself) -->
     <form action="index.php" method="post">
         <p>Name: <input type="text" name="name" /></p>
         <p>Age: <input type="text" name="age" /></p>
@@ -436,11 +436,11 @@
         */
         echo "<br />Current Unix timestamp (seconds since the Unix Epoch (1.1. 1970 00:00 GMT)): " . time();
 
-        if(isset($_COOKIE['user'])) {
+        if(isset($_COOKIE['user'])) {   //isset() - checks if the variable is declared and not null
             echo "<br />Value of the cookie is: ". $_COOKIE['user'];
           }
 
-        //Creating/opening a file
+        // ---- Creating/opening a file ----
         $my_file = fopen("file.txt", "w");
         /* r: Opens file for read only.
            w: Opens file for write only. Erases the contents of the file or creates a new file if it doesn't exist.
@@ -452,6 +452,7 @@
            x+: Creates new file for read/write.          
         */
 
+        //returns file pointer resource (reference to an open file) or false if the file could not be opened or created
         echo $my_file;
 
         //in case of failure, show the last error
@@ -459,6 +460,176 @@
             $error = error_get_last();
             echo "<br />Failed to open file: " . $error['message'];
         }
+
+        //write to file
+        fwrite($my_file, "Peter\n");
+        fwrite($my_file, "John\n");
+
+        //close the file (returns true on success/false on failure)
+        fclose($my_file);
+
+        //append to file
+        $my_file = fopen("file.txt", 'a'); //Places the pointer at the end of the file
+        fwrite($my_file, "Maria");
+        fclose($my_file);
+
+        //read the whole file and place the contents into array (1 line = 1 element)
+        $my_file = file('file.txt');
+        foreach ($my_file as $line) {
+            echo $line .", ";
+        }
+
+        // ---- OOP ----
+        class Person {
+            public $age; //property (member variable)
+
+            public function speak() { //method
+              echo "Hi!";
+              echo $this->age; //"$this" means in this class/object
+            }
+        }
+
+        //new instance of the class (=new object)
+        $person = new Person();
+
+        //access the object's properties (object operator -> instead of . in Java)
+        $person->age = 23;  //note missing $ before age (age is not a variable but object property)
+        echo $person->age; 
+        $person->speak();
+
+        /*Constructor
+          • automatically runs when object is created
+        */
+        class Car {
+            public function __construct() {
+                echo "<br />Object created!";
+            }
+        }
+        $car = new Car();
+
+        //initializing a new object with parameters
+        class Animal {
+            public $name;
+            public $age;
+            public function __construct($name, $age) {
+                $this->name = $name;
+                $this->age = $age;
+            }
+        }
+        $animal = new Animal("Rex",7);
+        echo $animal->name;
+
+        /*Destructor
+          • automatically runs when object is destroyed
+          • never run it explicitly
+          • when object is not needed, it will be collected by garbage collector
+          • when the script ends, the object will be destroyed and the destructor will be called
+          • using unset() or null the variable referencing the object is complicated and has side effects, it is usually not used in PHP
+        */
+        class Flower {
+            public function __destruct() {
+                //Here we can e.g. release resources, write to log files, close a database connection, etc.
+                echo "Object destroyed";
+            }
+        }
+        $flower = new Flower();
+
+        /*Inheritance
+          • is-a relationship (Dog IS AN Animal)
+          • reusing the code from the parent class, adding new code in the child class (subclass)
+          • If the subclass defines an own constructor, it will run. If not, then it will be inherited from the parent class (if it is not "private").
+        */
+        class Dog extends Animal {
+            function woof () {
+                echo "Woof!";
+            }
+        }
+        
+        $dog = new Dog("Fox",5);
+        $dog->woof();
+
+        /*Visibility keywords
+          • public - accessible from anywhere
+          • protected - accessible only within the class itself, by inheriting, and by parent classes
+          • private - accessible only by the class
+
+          • methods without a visibility keyword are public
+        */
+
+        /*Interface
+          • An interface specifies a list of methods that a class must implement.
+          • These methods must be public.
+          • The interface does not contain implementations.
+          • Class can implement multiple interfaces (separate with ,) (ex.: class X implements A, B {}) 
+        */
+        
+        interface AnimalInterface {
+            public function makeSound();
+        }
+        
+        class MyDog implements AnimalInterface {
+            public function makeSound() {
+                echo "Woof! <br />";
+            }
+        }
+        class MyCat implements AnimalInterface {
+            public function makeSound() {
+                echo "Meow! <br />";
+            }
+        }
+        
+        $myObj1 = new MyDog();
+        $myObj1->makeSound();
+        
+        $myObj2 = new MyCat();
+        $myObj2->makeSound();
+
+        /*Abstract class
+          • abstract class is an abstraction of subclasses - we make subclass from it, and only from this subclass we can create object
+            (it is not possible to create object from an abstract class)
+          • can contain both methods with implementation (will be inherited by subclass) and abstract methods (must be implemented by subclass)
+          • Subclass must implement all the abstract methods.
+          • is-a relationship (Apple IS A Fruit)
+         */
+         abstract class Fruit { 
+            private $color; 
+            
+            abstract public function eat(); 
+            
+            public function setColor($c) { 
+                $this->color = $c; 
+            } 
+        } 
+        
+        class Apple extends Fruit {
+            public function eat() {
+                echo "Eating... Yummy!";
+            }
+        }
+        
+        $obj = new Apple();
+        $obj->eat();
+
+        /*Static
+          • Static property/method of a class can be accessed without creating an object from that class.
+          • Accessed by using the scope resolution operator :: between the class name and the property/method name.
+          • Objects of a class cannot access static properties in the class but they can access static methods.
+        */
+        class MyClass {
+            static $myStaticProperty = 10000000;
+            static function myMethod() {
+                //referencing the class itself
+                echo self::$myStaticProperty;
+            }
+         }
+         
+        echo MyClass::$myStaticProperty;
+
+
+        
+
+
+
 
     ?>
 
