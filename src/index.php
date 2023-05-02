@@ -440,6 +440,26 @@
             echo "<br />Value of the cookie is: ". $_COOKIE['user'];
           }
 
+        //Creating/opening a file
+        $my_file = fopen("file.txt", "w");
+        /* r: Opens file for read only.
+           w: Opens file for write only. Erases the contents of the file or creates a new file if it doesn't exist.
+           a: Opens file for write only. Appends new data to the end of the file.
+           x: Creates new file for write only.
+           r+: Opens file for read/write.
+           w+: Opens file for read/write. Erases the contents of the file or creates a new file if it doesn't exist.
+           a+: Opens file for read/write. Creates a new file if the file doesn't exist
+           x+: Creates new file for read/write.          
+        */
+
+        echo $my_file;
+
+        //in case of failure, show the last error
+        if ($my_file === false) {
+            $error = error_get_last();
+            echo "<br />Failed to open file: " . $error['message'];
+        }
+
     ?>
 
 

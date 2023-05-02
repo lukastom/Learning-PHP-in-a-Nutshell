@@ -20,5 +20,11 @@ COPY ./php.ini /usr/local/etc/php/conf.d/
 # create the log directory (for xdebug)
 RUN mkdir -p /var/www/log
 
+# Dirty hack here!:
 # set permissions for the log directory (for xdebug)
-RUN chmod -R 777 /var/www/log
+# RUN chmod -R 777 /var/www/log
+
+# set permissions for the main directory, so we can create files
+# RUN chmod -R 777 /var/www/html
+
+# The problem is, in this state, PHP script is run by user root (but /var/www/html/ is owned by default user 1000 1000). This needs a better solution.
