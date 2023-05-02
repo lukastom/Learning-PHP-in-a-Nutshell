@@ -1,3 +1,21 @@
+<?php
+    /* • Start the session - use this before any HTML tags
+       • Use it on every page where you want to use the session variables
+    */
+    session_start();
+
+    /* • Session variables can be used across the project
+       • Not stored in cookies
+       • How long it lasts:
+         • php.ini or .htaccess session.gc_maxlifetime = default 1440 seconds = 24 minutes
+         • => it resets after 24 minutes without activity
+    */
+    $_SESSION['color'] = "red";
+    $_SESSION['name'] = "John";
+
+    //setting cookie - must be done before any HTML tags
+    setcookie("user", "John", time() + (86400 * 30), '/'); //valid for 30 days, available through the entire site
+?>
 <html>
     <head>
         <title>My First PHP Page</title>
@@ -186,7 +204,7 @@
             echo " Adult";
         
         //switch
-        //note: fall through mechanism applies (after case is true, it runs until next break)
+        //note: fall through mechanism applies (after a case is true, it runs until the next break)
         $today = 'Tue';
         switch ($today) {
             case "Mon":
@@ -215,9 +233,8 @@
         do {
             echo "The number is " . $i . "<br/>";
             $i++;
-        } while($i <= 7);
+        } while ($i <= 7);
 
-        //for
         //for (init; test; increment) {}
         for ($a = 0; $a < 6; $a++) {
             echo "Value of a : ". $a . "<br />";
@@ -289,22 +306,142 @@
 
         /* ---- Predefined variables (superglobals) ----
           • superglobals are predefined variables that are always accessible, regardless of scope.
+        */ 
+
+        // $_SERVER
+        echo "<br /><br />";
+        echo "<strong>Filename: </strong>" .                     $_SERVER['PHP_SELF'];	//Filename of the currently executing script
+        echo "<br />";
+        echo "<strong>Server CGI version: </strong>" .           $_SERVER['GATEWAY_INTERFACE'];	//Version of the Common Gateway Interface (CGI) the server is using
+        echo "<br />";
+        echo "<strong>Host server IP: </strong>" .               $_SERVER['SERVER_ADDR'];	//IP address of the host server
+        echo "<br />";
+        echo "<strong>Server name: </strong>" .                  $_SERVER['SERVER_NAME'];	//name of the host server (such as www.w3schools.com)
+        echo "<br />";
+        echo "<strong>Server identification string: </strong>" . $_SERVER['SERVER_SOFTWARE'];	//server identification string (such as Apache/2.2.24)
+        echo "<br />";
+        echo "<strong>Info. protocol name+revision: </strong>" . $_SERVER['SERVER_PROTOCOL'];	//name and revision of the information protocol (such as HTTP/1.1)
+        echo "<br />";
+        echo "<strong>Request method: </strong>" .               $_SERVER['REQUEST_METHOD'];	//request method used to access the page (such as POST)
+        echo "<br />";
+        echo "<strong>Request timestamp: </strong>" .            $_SERVER['REQUEST_TIME'];	//timestamp of the start of the request (such as 1377687496)
+        echo "<br />";
+        echo "<strong>Query string: </strong>" .                 $_SERVER['QUERY_STRING'];	//query string if the page is accessed via a query string
+        echo "<br />";
+        echo "<strong>Accept header: </strong>" .                $_SERVER['HTTP_ACCEPT'];	//Accept header from the current request
+        echo "<br />";
+        echo "<strong>Accept_Charset header: </strong>" .        $_SERVER['HTTP_ACCEPT_CHARSET'];	//Accept_Charset header from the current request (such as utf-8,ISO-8859-1)
+        echo "<br />";
+        //HTTP_HOST - can be used as a part of a path
+        echo "<strong>Host header: </strong>" .                  $_SERVER['HTTP_HOST'];	//Host header from the current request
+        echo "<br />";
+        echo "<strong>URL (not reliable): </strong>" .           $_SERVER['HTTP_REFERER'];	//complete URL of the current page (not reliable because not all user-agents support it)
+        echo "<br />";
+        echo "<strong>HTTPS?: </strong>" .                       $_SERVER['HTTPS'];	//Is the script queried through a secure HTTP protocol
+        echo "<br />";
+        echo "<strong>User's IP: </strong>" .                    $_SERVER['REMOTE_ADDR'];	//IP address from where the user is viewing the current page
+        echo "<br />";
+        echo "<strong>User's hostname: </strong>" .              $_SERVER['REMOTE_HOST'];	//Host name from where the user is viewing the current page
+        echo "<br />";
+        echo "<strong>User's port: </strong>" .                  $_SERVER['REMOTE_PORT'];	//port being used on the user's machine to communicate with the web server
+        echo "<br />";
+        echo "<strong>Absolute path: </strong>" .                $_SERVER['SCRIPT_FILENAME'];	//absolute pathname of the currently executing script
+        echo "<br />";
+        echo "<strong>Web server SERVER_ADMIN: </strong>" .      $_SERVER['SERVER_ADMIN'];	//value given to the SERVER_ADMIN directive in the web server configuration file (if your script runs on a virtual host, it will be the value defined for that virtual host) (such as someone@w3schools.com)
+        echo "<br />";
+        echo "<strong>Web server port: </strong>" .              $_SERVER['SERVER_PORT'];	//port on the server machine being used by the web server for communication (such as 80)
+        echo "<br />";
+        echo "<strong>Server vers., virt. hostname: </strong>" . $_SERVER['SERVER_SIGNATURE'];	//server version and virtual host name which are added to server-generated pages
+        echo "<br />";
+        echo "<strong>Path (file system based): </strong>" .     $_SERVER['PATH_TRANSLATED'];	//file system based path to the current script
+        echo "<br />";
+        echo "<strong>Path: </strong>" .                         $_SERVER['SCRIPT_NAME'];	//path of the current script
+        echo "<br />";
+        echo "<strong>URI: </strong>" .                          $_SERVER['SCRIPT_URI'];	//URI of the current page
+        echo "<br />";
+
+        foreach ($_SERVER as $key => $value){
+            echo $key." : ".$value."<br>";
+        }
+        
+        /* $GLOBALS
         */
-
-       
-
-
         
-
-
-
-
-
-
-
-
-
+        /* $_REQUEST
+        */
+              
+        /* $_FILES
+        */
         
+        /* $_ENV
+        */
+        
+        /* $_COOKIE
+        */
+        
+        /* $_POST
+           • in body of HTTP request
+           • no limit in amount of data, supports multipart binary files
+
+           $_GET
+           • query string is sent in URL
+           • limited to 2000 characters
+
+           • always validate the data!
+        */
+     
     ?>
+    <!-- form - action is a php page, that runs after the form is submitted -->
+    <form action="index.php" method="post">
+        <p>Name: <input type="text" name="name" /></p>
+        <p>Age: <input type="text" name="age" /></p>
+        <p><input type="submit" name="submit" value="Submit" /></p>
+    </form>
+    <?php        
+        echo "Your name: " . $_POST["name"] . "<br />";
+        echo "Your age: " . $_POST["age"];
+    ?>
+    <form action="index.php" method="get">
+        <p>Income: <input type="text" name="income" /></p>
+        <p>IQ: <input type="text" name="iq" /></p>
+        <p><input type="submit" name="submit" value="Submit" /></p>
+    </form>
+    <?php        
+        echo "Your income: " . $_GET["income"] . "<br />";
+        echo "Your IQ: " . $_GET["iq"];
+    ?>
+    <?php
+        /* $_SESSION (see beginning of this file)
+        */
+        echo "<br />Session color: " . $_SESSION['color'];
+        echo "<br />Session name: " . $_SESSION['name'];
+        //remove all session variables
+        session_unset();
+        //end of all sessions, destroys the session's data, use at the end of the script
+        session_destroy();
+
+        /* ----- COOKIES ----
+           • used to identify the user
+           • cookie = small file on the user's computer
+           • Each time the same computer requests a page through a browser, it will send the cookie, too.
+
+           setcookie(name, value, expire, path, domain, secure, httponly);
+             • name (required) - other parameters are optional
+             • expire - in seconds, default is 0 (= end of session)
+             • path   - where on server is the cookie available. "/" = entire domain.  The default value is the current directory in which the cookie is being set.
+             • domain - e.g. "yourdomain.com" - available in all sub-domains.
+             • secure - TRUE = the cookie will only be set if a secure connection (HTTPS) exists. Default = FALSE.
+             • httponly - TRUE = the cookie will be accessible only via HTTP protocol (not accessible to scripting languages) - helps reduce identity theft using XSS attacks. Default = FALSE.
+             (see it used at the beginning of this file)
+        */
+        echo "<br />Current Unix timestamp (seconds since the Unix Epoch (1.1. 1970 00:00 GMT)): " . time();
+
+        if(isset($_COOKIE['user'])) {
+            echo "<br />Value of the cookie is: ". $_COOKIE['user'];
+          }
+
+    ?>
+
+
     </body>
 </html>
