@@ -618,13 +618,39 @@
         class MyClass {
             static $myStaticProperty = 10000000;
             static function myMethod() {
-                //referencing the class itself
+                //referencing the class itself (static)
                 echo self::$myStaticProperty;
             }
          }
          
         echo MyClass::$myStaticProperty;
 
+        /*Final
+          • final methods cannot be overridden in child classes
+          • final classes cannot be inherited
+          • properties cannot be marked final
+        */
+
+        class ParentClass {
+            final function myFunction() {
+                echo "Parent";
+            }
+        }
+        /*(this is not allowed)
+        class ChildClass extends ParentClass {
+            function myFunction() {
+                echo "Child";
+            }
+        }
+        */
+
+        final class myFinalClass {
+        }       
+        /*(this is not allowed)
+        class myClass extends myFinalClass {
+        }
+        */
+        
 
         
 
