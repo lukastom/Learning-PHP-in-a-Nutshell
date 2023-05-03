@@ -649,6 +649,8 @@
         /*(this is not allowed)
         class myClass extends myFinalClass {
         }
+
+        TEST
         */
         
 
