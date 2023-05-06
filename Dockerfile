@@ -13,9 +13,12 @@ RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
 # Copy my custom php.ini - the particular settings will override main php.ini. The 2 will be merged by PHP. 
 COPY ./php.ini /usr/local/etc/php/conf.d/
 
-# Install Midnight Commander, Nano
-RUN apt-get update && apt-get install -y mc \
-                                         nano
+# Install Midnight Commander, Nano, PDO
+RUN apt-get update && apt-get install -y \ 
+        mc \
+        nano \
+    && docker-php-ext-install pdo pdo_mysql \
+    && docker-php-ext-enable pdo_mysql
 
 # create the log directory (for xdebug)
 RUN mkdir -p /var/www/log

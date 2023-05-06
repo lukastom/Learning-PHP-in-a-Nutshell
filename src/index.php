@@ -35,17 +35,24 @@
         include 'header.php';
         require 'header.php';
 
+        //required file contains only return statement
+        $number = require 'configuration.php';
+        echo $number;
+
         echo "Hello World 1!";
     ?>
     <?
         echo "<strong>Hello</strong> World 2! ";
-        echo 'Hello World 3!'
+        echo 'Hello World 3!';
+        $message = "Hello World 4!";
     ?>
     <!-- this was removed in PHP 7:
     <script language="php">
         echo "Hello World!";
     </script>
     -->
+    <!--another version of the PHP tags, no ; at the end because the script immediately ends-->
+    <?= $message ?>
     <?php
         // This is a single-line comment
         /*
@@ -61,6 +68,10 @@
         // ---- Concatenation ----
         echo $name . $_age;
         echo " Name: $name, age: $_age. ";
+        //To prevent problems with recognizing the variable name
+        echo " Name: {$name}, age: {$_age}. ";
+        //When using ' it will not parse the variable but treat it as a string
+        echo ' Name: $name, age: $_age. ';
 
         /* ---- Constants ----
            define(name, value, case-insensitive)
@@ -126,8 +137,8 @@
         $c %= $a;
 
         /*comparison operators
-          ==  equal
-          === equal and same type (identical)
+          ==  equal (e.g. 10 == '10' is true)
+          === equal and same type (identical) (e.g. 10 == 10 is true)
           !=  not equal
           <>  not equal
           !== not equal or not same type (identical)
@@ -158,6 +169,20 @@
 
         echo $names[1];
 
+        //short syntax (array keyword not needed)
+        $a = [1, 2, 3, 4];
+        $a = ['one' => 1, 'two' => 2, 'three' => 3, 'four' => 4];
+
+        //appending to array
+        $greetings = [];
+        $greetings[] = "Hello";
+        $greetings[] = "Hi";
+        $greetings[] = "Greetings";
+        
+        foreach ($greetings as $greeting) {
+            echo $greeting;
+        }
+
         //count number of elements in an array
         echo count($names);
 
@@ -172,12 +197,39 @@
         $people['Amy'] = "21";
         $people['John'] = "42";
 
+        //check, if the array key exists
+        if (array_key_exists('David', $people)){
+            echo $people['David'];
+        };
+
         //2-dimensional associative array
         $people = array(
             'online'=>array('David', 'Amy'),
             'offline'=>array('John', 'Rob', 'Jack'),
             'away'=>array('Arthur', 'Daniel')
          );
+
+        /*array_filter()
+        • used, when we need to filter the array (to get only a subset)
+        • iterates over each element and returns a new array containing only the elements of the original array that pass the filter
+        • array_filter ($array, function)
+            • $array = the original array
+            • $function = the function to apply to each element
+            • returns true = keeps the element
+            • false = removes it (together with the index!) (for reindexing of the new array use array_values())
+        */
+        $array = [1,2,3,4,5,6,7,8,9,10];
+        //in $element will be automatically passed each $array element during the iteration
+        $new_array = array_filter($array, function($element){ if ($element%2 == 0) { return true; } else { return false; }});
+        //print_r – prints human-readable information about a variable
+        echo '<pre>';
+        print_r($new_array);
+        //var_dump – dumps information about a variable. <pre> keeps the formatting as it occurs in plain text. Some settings are in xdebug.
+        var_dump($new_array);
+        echo '</pre>';
+        //Ending the script after we got the variable dump         
+        //die();
+        //exit("End of script");
 
         // ---- Conditions ----
         //if, else
@@ -188,6 +240,16 @@
         } else {
             echo $y;
         }
+
+        //alternative syntax
+        if ($x < $y) :
+            echo $x;
+        endif;
+
+        //ternary operator
+        //$result = condition ? value1 : value2;
+        $smaller_number = ($x < $y) ? $x : $y;
+        echo $smaller_number;
 
         //elseif
         $age = 21;
@@ -254,6 +316,12 @@
             echo $name. " " .$value. '<br />';
         } 
 
+        //useful syntax for more complicated HTML inside
+        $names_array = array("John", "David", "Amy");
+        foreach ($names_array as $name) : ?>
+            <li><?= $name ?></li>
+        <?php endforeach;
+
         /*break
           • stops: for, foreach, while, do-while, switch, whole program
 
@@ -268,6 +336,7 @@
         }
 
         // ---- Functions ----
+        //named function        
         function sayHello() {
             echo "Hello!";
         }
@@ -281,7 +350,7 @@
         }
         multiplyByTwo(3); //3 = argument passed to the function
 
-        //function with more parameters
+        //function with more parameters (parameters = signature)
         function multiply($num1, $num2) {
             echo $num1 * $num2;
         }
@@ -306,6 +375,19 @@
         }
     
         echo multiplicate(8, 3);
+
+        /*Anonymous function (=closure) (=lambda function)
+          • For defining a small piece of functionality that will be used only once, and you don't want to define a separate named function for it. 
+          • It helps to quickly adjust the function in-place, no need to jump to the function in other place in the code.
+          • When used as a parameter that goes into another function, $fn is often used for that.
+        */
+        $greet = function($name) {
+            echo("<br />Hello " . $name);
+        };
+        //PHP automatically converts this into instance of the Closure internal class. So, $greet is now an object.
+        
+        $greet('World');
+        $greet('PHP');
 
         /* ---- Predefined variables (superglobals) ----
           • superglobals are predefined variables that are always accessible, regardless of scope.
@@ -338,6 +420,9 @@
         //HTTP_HOST - can be used as a part of a path
         echo "<strong>Host header: </strong>" .                  $_SERVER['HTTP_HOST'];	//Host header from the current request
         echo "<br />";
+        //REQUEST_URI - can be used as a part of a path
+        echo "<strong>Request URI: </strong>" .                  $_SERVER['REQUEST_URI'];	//Host header from the current request
+        echo "<br />";
         echo "<strong>URL (not reliable): </strong>" .           $_SERVER['HTTP_REFERER'];	//complete URL of the current page (not reliable because not all user-agents support it)
         echo "<br />";
         echo "<strong>HTTPS?: </strong>" .                       $_SERVER['HTTPS'];	//Is the script queried through a secure HTTP protocol
@@ -366,6 +451,12 @@
         foreach ($_SERVER as $key => $value){
             echo $key." : ".$value."<br>";
         }
+
+        /*parse_url returns array with path and query string (can return other types in different situations)
+          • used for separating URI and query string */
+        var_dump(
+            parse_url($_SERVER['REQUEST_URI'])
+        );
         
         /* $GLOBALS
         */
@@ -477,6 +568,72 @@
         $my_file = file('file.txt');
         foreach ($my_file as $line) {
             echo $line .", ";
+        }
+
+        /* ---- DATABASES ----
+           • PDO = PHP Data Objects 
+           • in real life, use 
+        */
+
+        /*Initialize PDO - create new object from PDO class + connect to db
+          • $dsn = Data Source Name (a string with connection settings)
+          • we need pdo, pdo_mysql PHP extensions installed (otherwise, we get error "could not find driver")
+        */
+        $dsn = "mysql:host=172.19.0.3;port=3306;dbname=myapp;charset=utf8mb4";
+        $username = "root";
+        $password = "example";
+
+        //Try-catch block to catch connection errors
+        try {
+            //If the connection fails, the $pdo object will be not created, so it will be null
+            $pdo = new PDO($dsn, $username, $password);
+        } catch (PDOException $e) {
+            echo "Connection failed: " . $e->getMessage();
+        }
+
+        /* Using connections options – setting default mode to PDO::FETCH_ASSOC
+        $this->connection = new PDO($dsn, $username, $password, [
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        ]);
+        */
+
+        //Testing, if $pdo object exists or the variable is null
+        if ($pdo) {    
+            //Prepare SQL query
+            $statement = $pdo->prepare("SELECT * FROM posts");
+            //Execute SQL query
+            $statement->execute();
+
+            /*SQL injection proof way
+              • This is called prepared statements with parameterized queries
+              • PDO execute() will escape the parameters (using mysql_real_escape_string()), so the malicious code is not executed
+              • This is safe only 90%, for 100% one possibility is to make sure that we use safe db connection encoding (like utf8)
+            */
+            $statement = $pdo->prepare("SELECT * FROM posts WHERE id =?"); //? = placeholder, will be replaced by parameter
+            $id = $_GET['id'];
+            $statement->execute($id);
+            //alternative syntax
+            $statement = $pdo->prepare("SELECT * FROM posts WHERE id = :id"); //:id = placeholder, will be replaced by parameter
+            $id = $_GET['id'];
+            $statement->execute(['id' => $id]); //syntax alternative: [':id' => $id]. It means: replace :id with $id value.
+
+
+            /*Fetch all results of the SQL query
+            • ->fetchAll() method gives everything twice (indexed version and key version)
+                • PDO::FETCH_ASSOC gives us associative array (everything just once)
+            */
+            $posts = $statement->fetchAll(PDO::FETCH_ASSOC);    
+
+            echo "<br /><strong>Titles in my database:</strong><br />";
+            foreach ($posts as $post) {
+                echo "<li>" . $post['title'] . "</li>";
+            }
+
+            //Fetch just one result
+            $statement = $pdo->prepare("SELECT * FROM posts WHERE id = 1");
+            $statement->execute();
+            $post = $statement->fetch(PDO::FETCH_ASSOC);
+            echo $post['title']. "<br />";
         }
 
         // ---- OOP ----
@@ -616,6 +773,8 @@
           • Objects of a class cannot access static properties in the class but they can access static methods.
         */
         class MyClass {
+            //Constant declaration (constant is always public)
+            public const SOME_CONST = 1;
             static $myStaticProperty = 10000000;
             static function myMethod() {
                 //referencing the class itself (static)
@@ -624,6 +783,7 @@
          }
          
         echo MyClass::$myStaticProperty;
+        echo MyClass::SOME_CONST;
 
         /*Final
           • final methods cannot be overridden in child classes
@@ -649,9 +809,27 @@
         /*(this is not allowed)
         class myClass extends myFinalClass {
         }
-
-        TEST
         */
+
+        // ---- HTTP ----
+        //Get response code
+        //http_response_code();
+
+        //Set response code
+        //http_response_code(404);
+
+        //Build query string from array
+        $array = array(
+            'foo' => 'bar',
+            'baz' => 'boom',
+            'cow' => 'milk',
+            'null' => null,
+            'php' => 'hypertext processor'
+        );
+        
+        echo http_build_query($array, '', '&');
+
+
         
 
         
