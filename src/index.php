@@ -829,6 +829,28 @@
         
         echo http_build_query($array, '', '&');
 
+        /* ---- Fluent interface ----
+           • allows to chain method calls
+           • instead of 
+             $object->function1();
+             $object->function2();
+             $object->function3();
+
+             we can do this:
+             $object->function1()->function2()->function3();
+        */
+        class MyNiceClass {
+            public function myFunction() {
+               //returning the object itself
+               return $this;
+            }
+            public function anotherFunction() {   
+            }
+        }
+
+        $myObject = new MyNiceClass();
+        $myObject->myFunction()->anotherFunction();
+
 
         
 
