@@ -40,11 +40,13 @@
         echo $number;
 
         echo "Hello World 1!";
-    ?>
-    <?
+
         echo "<strong>Hello</strong> World 2! ";
         echo 'Hello World 3!';
         $message = "Hello World 4!";
+    ?>
+    <?
+       //These short PHP tags are planned to be deprecated in PHP 9. Meanwhile, their interpretation depends on server setting. Better not to use.
     ?>
     <!-- this was removed in PHP 7:
     <script language="php">
@@ -231,6 +233,19 @@
         //die();
         //exit("End of script");
 
+        /*extract()
+          • extracts values from array and turns them into set of variables
+        */
+        $people = array(
+            "David"=>"27",
+            "Amy"=>"21",
+            "John"=>"42"
+        );
+        extract($people);
+        echo $David; //returns 27
+        echo $Amy; //returns 21
+        echo $John; //returns 42
+
         // ---- Conditions ----
         //if, else
         $x = 10;
@@ -358,6 +373,7 @@
 
         /*default argument
           • if there are arguments and default arguments, list the non-default arguments first! Like this: function sum($num2, $num1 = 1)
+          • ∞ infinite: $num=INF
         */
         function setCounter($num=10) {
             echo "Counter is ".$num."<br />";
@@ -407,6 +423,7 @@
         echo "<br />";
         echo "<strong>Info. protocol name+revision: </strong>" . $_SERVER['SERVER_PROTOCOL'];	//name and revision of the information protocol (such as HTTP/1.1)
         echo "<br />";
+        //REQUEST_METHOD - to detect e.g. if we got data from a form 
         echo "<strong>Request method: </strong>" .               $_SERVER['REQUEST_METHOD'];	//request method used to access the page (such as POST)
         echo "<br />";
         echo "<strong>Request timestamp: </strong>" .            $_SERVER['REQUEST_TIME'];	//timestamp of the start of the request (such as 1377687496)
@@ -415,7 +432,7 @@
         echo "<br />";
         echo "<strong>Accept header: </strong>" .                $_SERVER['HTTP_ACCEPT'];	//Accept header from the current request
         echo "<br />";
-        echo "<strong>Accept_Charset header: </strong>" .        $_SERVER['HTTP_ACCEPT_CHARSET'];	//Accept_Charset header from the current request (such as utf-8,ISO-8859-1)
+        //echo "<strong>Accept_Charset header: </strong>" .        $_SERVER['HTTP_ACCEPT_CHARSET'];	//Accept_Charset header from the current request (such as utf-8,ISO-8859-1)
         echo "<br />";
         //HTTP_HOST - can be used as a part of a path
         echo "<strong>Host header: </strong>" .                  $_SERVER['HTTP_HOST'];	//Host header from the current request
@@ -425,11 +442,11 @@
         echo "<br />";
         echo "<strong>URL (not reliable): </strong>" .           $_SERVER['HTTP_REFERER'];	//complete URL of the current page (not reliable because not all user-agents support it)
         echo "<br />";
-        echo "<strong>HTTPS?: </strong>" .                       $_SERVER['HTTPS'];	//Is the script queried through a secure HTTP protocol
+        //echo "<strong>HTTPS?: </strong>" .                       $_SERVER['HTTPS'];	//Is the script queried through a secure HTTP protocol
         echo "<br />";
         echo "<strong>User's IP: </strong>" .                    $_SERVER['REMOTE_ADDR'];	//IP address from where the user is viewing the current page
         echo "<br />";
-        echo "<strong>User's hostname: </strong>" .              $_SERVER['REMOTE_HOST'];	//Host name from where the user is viewing the current page
+        //echo "<strong>User's hostname: </strong>" .              $_SERVER['REMOTE_HOST'];	//Host name from where the user is viewing the current page
         echo "<br />";
         echo "<strong>User's port: </strong>" .                  $_SERVER['REMOTE_PORT'];	//port being used on the user's machine to communicate with the web server
         echo "<br />";
@@ -441,11 +458,11 @@
         echo "<br />";
         echo "<strong>Server vers., virt. hostname: </strong>" . $_SERVER['SERVER_SIGNATURE'];	//server version and virtual host name which are added to server-generated pages
         echo "<br />";
-        echo "<strong>Path (file system based): </strong>" .     $_SERVER['PATH_TRANSLATED'];	//file system based path to the current script
+        //echo "<strong>Path (file system based): </strong>" .     $_SERVER['PATH_TRANSLATED'];	//file system based path to the current script
         echo "<br />";
         echo "<strong>Path: </strong>" .                         $_SERVER['SCRIPT_NAME'];	//path of the current script
         echo "<br />";
-        echo "<strong>URI: </strong>" .                          $_SERVER['SCRIPT_URI'];	//URI of the current page
+        //echo "<strong>URI: </strong>" .                          $_SERVER['SCRIPT_URI'];	//URI of the current page
         echo "<br />";
 
         foreach ($_SERVER as $key => $value){
@@ -478,27 +495,46 @@
            • query string is sent in URL
            • limited to 2000 characters
 
-           • always validate the data!
+           • the problem is, the user can insert for example a JS tag like <script>alert("hi")</script>
+             (principle: The user is guilty until proven innocent.)
+             • we cane sanitize the data on input OR
+             • we can escape the data in the output (e.g. with htmlspecialchars())
+
+           • validate the input data
+             • check, if the input is empty (isset())
+             • constrain it to minimum number of characters and maximum number of characters (strlen()-  gives string length)
+               • in that case, do not delete everything the user has inserted
+             • trim it (trim())
+             • validate e-mail address string: filter_var('bob@example.com', FILTER_VALIDATE_EMAIL)
         */
      
     ?>
     <!-- form - action is a php page, that runs after the form is submitted (without action set, it runs itself) -->
     <form action="index.php" method="post">
-        <p>Name: <input type="text" name="name" /></p>
+        <!-- required: client side check if the field is not empty -->
+        <p>Name: <input type="text" name="name" required /></p>
         <p>Age: <input type="text" name="age" /></p>
         <p><input type="submit" name="submit" value="Submit" /></p>
     </form>
-    <?php        
-        echo "Your name: " . $_POST["name"] . "<br />";
+    <?php    
+        //escaping the data in the output    
+        echo "Your name: " . htmlspecialchars($_POST["name"]) . "<br />";
         echo "Your age: " . $_POST["age"];
     ?>
     <form action="index.php" method="get">
+        <!-- "income" and "iq" are sent as query string parameters (these are often db column names) -->
         <p>Income: <input type="text" name="income" /></p>
-        <p>IQ: <input type="text" name="iq" /></p>
+        <!-- keeping the input text in the input field-->
+        <p>IQ: <input type="text" name="iq" value="<?= $_GET["iq"] ?? "" ?>" /></p>
         <p><input type="submit" name="submit" value="Submit" /></p>
     </form>
     <?php        
-        echo "Your income: " . $_GET["income"] . "<br />";
+        /*
+        • long form:
+          echo "Your income: " . (isset($_GET["income"]) ? $_GET["income"] : "Empty input") . "<br />";
+
+        • modern short form (PHP 8) (null coalescing operator): */
+        echo "Your income: " . ($_GET["income"] ?? "Empty input") . "<br />";
         echo "Your IQ: " . $_GET["iq"];
     ?>
     <?php
@@ -530,6 +566,10 @@
         if(isset($_COOKIE['user'])) {   //isset() - checks if the variable is declared and not null
             echo "<br />Value of the cookie is: ". $_COOKIE['user'];
           }
+
+        // ---- Magic constants ----
+        echo '<br />Magic constant __DIR__: ' . __DIR__; //directory of the current file.
+        // go up in path: /../path/to/file
 
         // ---- Creating/opening a file ----
         $my_file = fopen("file.txt", "w");
@@ -573,13 +613,12 @@
         /* ---- DATABASES ----
            • PDO = PHP Data Objects 
            • in real life, use 
-        */
 
-        /*Initialize PDO - create new object from PDO class + connect to db
+          Initialize PDO - create new object from PDO class + connect to db
           • $dsn = Data Source Name (a string with connection settings)
           • we need pdo, pdo_mysql PHP extensions installed (otherwise, we get error "could not find driver")
         */
-        $dsn = "mysql:host=172.19.0.3;port=3306;dbname=myapp;charset=utf8mb4";
+        $dsn = "mysql:host=172.19.0.4;port=3306;dbname=myapp;charset=utf8mb4";
         $username = "root";
         $password = "example";
 
@@ -771,6 +810,7 @@
           • Static property/method of a class can be accessed without creating an object from that class.
           • Accessed by using the scope resolution operator :: between the class name and the property/method name.
           • Objects of a class cannot access static properties in the class but they can access static methods.
+          • Can be used for "pure functions" or very simple functions, that are totally self contained and simply convert input to output.
         */
         class MyClass {
             //Constant declaration (constant is always public)
@@ -850,6 +890,22 @@
 
         $myObject = new MyNiceClass();
         $myObject->myFunction()->anotherFunction();
+
+        /* ---- Automatically load class from a file ----
+          • automatically loads class files on demand
+          • we can use it at the beginning of our app, it is triggered every time, when we are using a class name, that not manually included in our app
+          • used in big apps, so we do not need to include classes manually by "include", we simply make a file for each class and include classes automatically.
+          • we can also register classes from 3rd party libraries, that have class files in other places than the main app
+
+        /*This is a generic code that will trigger only after using a class name not included in our app
+          We do not know yet what the classes' names will be, so we use just $class_name*/         
+        spl_autoload_register(function ($class_name) {
+            include $class_name . '.php';
+        });
+        //This class is not defined in this file but in a separate file and will be auto loaded
+        $interestingObject = new ClassToBeAutoload();
+        $interestingObject->Scream();
+
 
 
         
