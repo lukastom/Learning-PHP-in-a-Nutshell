@@ -1,15 +1,23 @@
 <?php
+    /* Send a raw HTTP header (must be at the start of the script)
+       //Redirect and exit
+       header("Location: http://www.google.com/");
+       exit;
+    */  
+
+    //Setting namespaces
+    use Core\CoreClass;
+    use function Core\coreFunction;
+
     /* • Start the session - use this before any HTML tags
-       • Use it on every page where you want to use the session variables
-    */
+       • Use it on every page where you want to use the session variables */
     session_start();
 
     /* • Session variables can be used across the project
        • Not stored in cookies
        • How long it lasts:
          • php.ini or .htaccess session.gc_maxlifetime = default 1440 seconds = 24 minutes
-         • => it resets after 24 minutes without activity
-    */
+         • => it resets after 24 minutes without activity */
     $_SESSION['color'] = "red";
     $_SESSION['name'] = "John";
 
@@ -32,11 +40,11 @@
            • include = after file not found, the script continues
            • require = after file not found, the script stops
         */
-        include 'header.php';
-        require 'header.php';
+        //include 'src/header.php';
+        require 'src/header.php';
 
         //required file contains only return statement
-        $number = require 'configuration.php';
+        $number = require 'src/configuration.php';
         echo $number;
 
         echo "Hello World 1!";
@@ -246,19 +254,33 @@
         echo $Amy; //returns 21
         echo $John; //returns 42
 
+        /*compact()
+          • does the opposite of compact()
+          •turns variables into an array
+        */
+        $city  = "San Francisco";
+        $state = "CA";
+        $event = "Convention";
+
+        $result = compact("city", "state", "event");
+        echo "<br /><em>Compact() turned variables into an array:</em><br />";
+        print_r($result);
+
+        echo '<br />Last array key is: ' . array_key_last($result);
+
         // ---- Conditions ----
         //if, else
         $x = 10;
         $y = 20;
         if ($x >= $y) {
-            echo $x;
+            echo '<br />' . $x;
         } else {
-            echo $y;
+            echo '<br />' . $y;
         }
 
         //alternative syntax
         if ($x < $y) :
-            echo $x;
+            echo '<br />' . $x;
         endif;
 
         //ternary operator
@@ -440,7 +462,7 @@
         //REQUEST_URI - can be used as a part of a path
         echo "<strong>Request URI: </strong>" .                  $_SERVER['REQUEST_URI'];	//Host header from the current request
         echo "<br />";
-        echo "<strong>URL (not reliable): </strong>" .           $_SERVER['HTTP_REFERER'];	//complete URL of the current page (not reliable because not all user-agents support it)
+        //echo "<strong>URL (not reliable): </strong>" .           $_SERVER['HTTP_REFERER'];	//complete URL of the current page (not reliable because not all user-agents support it)
         echo "<br />";
         //echo "<strong>HTTPS?: </strong>" .                       $_SERVER['HTTPS'];	//Is the script queried through a secure HTTP protocol
         echo "<br />";
@@ -466,6 +488,11 @@
         echo "<br />";
 
         foreach ($_SERVER as $key => $value){
+            //for argv, argc (arguments passed to script if run from command line)
+            if(is_array($value)){
+                $value = implode(",", $value);             
+            }
+
             echo $key." : ".$value."<br>";
         }
 
@@ -518,8 +545,8 @@
     </form>
     <?php    
         //escaping the data in the output    
-        echo "Your name: " . htmlspecialchars($_POST["name"]) . "<br />";
-        echo "Your age: " . $_POST["age"];
+        echo "Your name: " . htmlspecialchars($_POST["name"] ?? "") . "<br />";
+        echo "Your age: " . ($_POST["age"] ?? "");
     ?>
     <form action="index.php" method="get">
         <!-- "income" and "iq" are sent as query string parameters (these are often db column names) -->
@@ -535,7 +562,7 @@
 
         • modern short form (PHP 8) (null coalescing operator): */
         echo "Your income: " . ($_GET["income"] ?? "Empty input") . "<br />";
-        echo "Your IQ: " . $_GET["iq"];
+        echo "Your IQ: " . ($_GET["iq"] ?? "Empty input");
     ?>
     <?php
         /* $_SESSION (see beginning of this file)
@@ -544,8 +571,14 @@
         echo "<br />Session name: " . $_SESSION['name'];
         //remove all session variables
         session_unset();
-        //end of all sessions, destroys the session's data, use at the end of the script
+        //end of all sessions, destroys the session's data on the server, use at the end of the script
         session_destroy();
+
+        /*Regenerate the session ID
+          • defense again attacks that could spoof the old session ID
+          • use this on new user's login
+        */
+        session_regenerate_id(true); //true = deletes the old session ID
 
         /* ----- COOKIES ----
            • used to identify the user
@@ -566,13 +599,17 @@
         if(isset($_COOKIE['user'])) {   //isset() - checks if the variable is declared and not null
             echo "<br />Value of the cookie is: ". $_COOKIE['user'];
           }
+        
+        //delete the cookie in the browser
+        $params = session_get_cookie_params();
+        setcookie('PHPSESSID', '', time() - 3600, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
 
         // ---- Magic constants ----
         echo '<br />Magic constant __DIR__: ' . __DIR__; //directory of the current file.
         // go up in path: /../path/to/file
 
         // ---- Creating/opening a file ----
-        $my_file = fopen("file.txt", "w");
+        $my_file = fopen("src/file.txt", "w");
         /* r: Opens file for read only.
            w: Opens file for write only. Erases the contents of the file or creates a new file if it doesn't exist.
            a: Opens file for write only. Appends new data to the end of the file.
@@ -600,12 +637,12 @@
         fclose($my_file);
 
         //append to file
-        $my_file = fopen("file.txt", 'a'); //Places the pointer at the end of the file
+        $my_file = fopen("src/file.txt", 'a'); //Places the pointer at the end of the file
         fwrite($my_file, "Maria");
         fclose($my_file);
 
         //read the whole file and place the contents into array (1 line = 1 element)
-        $my_file = file('file.txt');
+        $my_file = file('src/file.txt');
         foreach ($my_file as $line) {
             echo $line .", ";
         }
@@ -618,7 +655,7 @@
           • $dsn = Data Source Name (a string with connection settings)
           • we need pdo, pdo_mysql PHP extensions installed (otherwise, we get error "could not find driver")
         */
-        $dsn = "mysql:host=172.19.0.4;port=3306;dbname=myapp;charset=utf8mb4";
+        $dsn = "mysql:host=172.19.0.2;port=3306;dbname=myapp;charset=utf8mb4";
         $username = "root";
         $password = "example";
 
@@ -649,12 +686,15 @@
               • This is safe only 90%, for 100% one possibility is to make sure that we use safe db connection encoding (like utf8)
             */
             $statement = $pdo->prepare("SELECT * FROM posts WHERE id =?"); //? = placeholder, will be replaced by parameter
-            $id = $_GET['id'];
+            $id = array(1); //$_GET['id'];
+            //var_dump($_GET['id']);
+            //die();
             $statement->execute($id);
-            //alternative syntax
-            $statement = $pdo->prepare("SELECT * FROM posts WHERE id = :id"); //:id = placeholder, will be replaced by parameter
-            $id = $_GET['id'];
-            $statement->execute(['id' => $id]); //syntax alternative: [':id' => $id]. It means: replace :id with $id value.
+            /*alternative syntax
+              $statement = $pdo->prepare("SELECT * FROM posts WHERE id = :id"); //:id = placeholder, will be replaced by parameter
+              $id = $_GET['id'];
+              $statement->execute(['id' => $id]); //syntax alternative: [':id' => $id]. It means: replace :id with $id value.
+            */
 
 
             /*Fetch all results of the SQL query
@@ -725,7 +765,7 @@
         class Flower {
             public function __destruct() {
                 //Here we can e.g. release resources, write to log files, close a database connection, etc.
-                echo "Object destroyed";
+                echo "<br />Object destroyed";
             }
         }
         $flower = new Flower();
@@ -806,7 +846,7 @@
         $obj = new Apple();
         $obj->eat();
 
-        /*Static
+        /* ---- Static ----
           • Static property/method of a class can be accessed without creating an object from that class.
           • Accessed by using the scope resolution operator :: between the class name and the property/method name.
           • Objects of a class cannot access static properties in the class but they can access static methods.
@@ -818,14 +858,28 @@
             static $myStaticProperty = 10000000;
             static function myMethod() {
                 //referencing the class itself (static)
-                echo self::$myStaticProperty;
+                echo '<br />' . self::$myStaticProperty;
+                /*"static::" works the same like "self::" with one difference! If myClass is extended by myClassChild, "self::" will refer to the original definition class (myClass)
+                  but "static::" will refer to $myStaticProperty in the child class that currently runs (myClassChild)*/
+                echo '<br />' . static::$myStaticProperty;
             }
-         }
-         
+         } 
         echo MyClass::$myStaticProperty;
         echo MyClass::SOME_CONST;
 
-        /*Final
+        // Get class in a static way 
+        class MyClassHi {
+            public function myMethod() {
+              echo "Hello, world!";
+            }
+        }
+        // Get the class object for MyClassHi (not instance but just the class)
+        $classObj = MyClassHi::class;
+        // Create an instance of MyClassHi
+        $instance = new $classObj();
+        $instance->myMethod();
+
+        /* ---- Final ----
           • final methods cannot be overridden in child classes
           • final classes cannot be inherited
           • properties cannot be marked final
@@ -850,6 +904,18 @@
         class myClass extends myFinalClass {
         }
         */
+
+        /* ---- Singletons ----
+           • This is not true singleton but they call it so in Laracasts PHP for Beginners>35 video. They call it like App::setContainer($container). Maybe they name it so, because
+             they intend to call it just once? Or they plan to add proper singleton multiple instantiation prevention later?
+        */
+        class App {
+            protected static $container;
+
+            public static function setContainer($container){
+                static::$container = $container;
+            }
+        }
 
         // ---- HTTP ----
         //Get response code
@@ -900,11 +966,75 @@
         /*This is a generic code that will trigger only after using a class name not included in our app
           We do not know yet what the classes' names will be, so we use just $class_name*/         
         spl_autoload_register(function ($class_name) {
-            include $class_name . '.php';
+            include 'src/' . $class_name . '.php';
         });
         //This class is not defined in this file but in a separate file and will be auto loaded
         $interestingObject = new ClassToBeAutoload();
         $interestingObject->Scream();
+
+        /* ---- Namespaces ----
+        • help to organize code
+        • Similar logic to a folder (group of scripts). It is a convention to use namespace in a folder with the same name, so effectively namespace=folder.
+        • When we use something from this namespace: Core\CoreClass
+        */
+        require 'Core/CoreFunctionality.php';
+
+        Core\coreFunction();
+        $coreClass = new Core\CoreClass();
+        $coreClass->greetings();
+
+        /*alternative syntax
+        use Core;  //put this at the beginning of your script. Warning: this means that it will try to find every single class in this namespace. Solution:
+           a) if we want call something not from the namespace, we can call it from root like e.g. \PDO 
+           b) we can place use PDO; at the beginning of the script (and all classes we want to use)
+        $coreClass = new CoreClass();    //now we do not need to add \Core
+        */
+
+        // ---- Working with Text ----
+        $myString = '<br />World! Hello World!';
+        //Replace 'World' with 'REPLACED' in $myString (all occurrences)
+        $myString = str_replace('World', 'REPLACED', $myString);
+        echo $myString;
+
+        //String to uppercase
+        $myString = '<br />Hello World in uppercase!';
+        echo strtoupper($myString);
+
+        //Hash password
+        $hashedPassword = password_hash('GreatPassword1-', PASSWORD_BCRYPT); //random salt is also generated
+        echo '<br />The hashed password is: ' . $hashedPassword;
+
+        //Verify password
+        $passwordVerified = password_verify('GreatPassword1-',$hashedPassword);
+        if ($passwordVerified) {
+            echo '<br />Password is verified!';
+        }
+
+        // ---- Predefined Constants ----
+        echo '<br />Directory separator in your system is: ' . DIRECTORY_SEPARATOR;
+
+        // ---- HTTP Headers ----
+        //list of headers as array
+        $headers = headers_list();
+        echo '<br /><br /><strong>Here are all HTTP headers sent by the server:</strong><br />';
+        foreach ($headers as $header) {
+            echo $header . "<br>";
+        }
+
+        // ---- Error Handling ----
+        function divideOneByX($x) {
+            if ($x===0) {
+                //Throw - will throw an Uncaught Exception with line number
+                throw new Exception('Error: division by zero.');
+            }
+            return '1/' . $x . ' is ' . 1/$x;
+        }
+        echo '<br />' . divideOneByX(5); //try 0 here
+
+
+
+
+
 
 
 

@@ -11,7 +11,7 @@
             "request": "launch",
             "port": 9003,
             "pathMappings":{
-                "/var/www/html/":"/home/lukas/Sites/Learning-PHP-in-a-Nutshell/src/"
+                "/var/www/html/":"/home/lukas/Sites/Learning-PHP-in-a-Nutshell/"
             }
         }
     ]
