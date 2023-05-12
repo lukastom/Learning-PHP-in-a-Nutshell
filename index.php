@@ -34,7 +34,7 @@
         //phpinfo();
         //echo xdebug_info();
         
-        /* ---- Include, require ----
+        /* ------------ Include, require ------------
            = insertion of the content of one PHP file into another PHP file, before the server executes our script.
            • absolute or relative path to the file
            • include = after file not found, the script continues
@@ -45,13 +45,13 @@
 
         //required file contains only return statement
         $number = require 'src/configuration.php';
-        echo $number;
+        echo '<br />' . $number;
 
-        echo "Hello World 1!";
+        echo "<br />Hello World 1!";
 
-        echo "<strong>Hello</strong> World 2! ";
-        echo 'Hello World 3!';
-        $message = "Hello World 4!";
+        echo "<br /><strong>Hello</strong> World 2! ";
+        echo '<br />Hello World 3!';
+        $message = "<br />Hello World 4!";
     ?>
     <?
        //These short PHP tags are planned to be deprecated in PHP 9. Meanwhile, their interpretation depends on server setting. Better not to use.
@@ -70,28 +70,28 @@
           comment block
         */
 
-        // ---- Variables ----
+        // ------------ Variables ------------
         $name = 'John';
         $_age = 25;
-        echo $name;
-        echo $_age;
-        // ---- Concatenation ----
-        echo $name . $_age;
-        echo " Name: $name, age: $_age. ";
+        echo '<br />' . $name;
+        echo '<br />' . $_age;
+        // ------------ Concatenation ------------
+        echo '<br />' . $name . $_age;
+        echo "<br /> Name: $name, age: $_age. ";
         //To prevent problems with recognizing the variable name
-        echo " Name: {$name}, age: {$_age}. ";
+        echo "<br /> Name: {$name}, age: {$_age}. ";
         //When using ' it will not parse the variable but treat it as a string
-        echo ' Name: $name, age: $_age. ';
+        echo '<br /> Name: $name, age: $_age. ';
 
-        /* ---- Constants ----
+        /* ------------ Constants ------------
            define(name, value, case-insensitive)
            case-insensitive - default is false
         */
         define("constant",3.14);
         //no $ sign:
-        echo constant;
+        echo '<br />' . constant;
 
-        /* ---- Data types ----
+        /* ------------ Data types ------------
            String = "string" 'string'
            Integer = -123 +123
            Float = 3.14
@@ -106,7 +106,7 @@
         $number_string = "12";
         $number = 13;
         $number = $number + $number_string;
-        echo $number;
+        echo '<br />' . $number;
 
         /*Variables Scope
           local = declared in a function, can be accessed only within the function
@@ -116,16 +116,16 @@
         function getName() {
             //access global variable
             global $my_name;
-            echo $my_name;
+            echo '<br />' . $my_name;
         }
         getName();
 
         //use variable as another's variable name
         $a = 'hello';
-        $hello = "Hi!";
+        $hello = "<br />Hi!";
         echo $$a;
 
-        // ---- Operators ----
+        // ------------ Operators ------------
         $a = 2;
         $b = 3;
 
@@ -167,7 +167,7 @@
           !     NOT
         */
 
-        // ---- Arrays ----
+        // ------------ Arrays ------------
 
         //Numeric arrays
         //• arrays can store mixed data types
@@ -177,7 +177,7 @@
         $names[1] = "<strong>Amy</strong>";
         $names[2] = 3.14;
 
-        echo $names[1];
+        echo '<br />' . $names[1];
 
         //short syntax (array keyword not needed)
         $a = [1, 2, 3, 4];
@@ -190,11 +190,11 @@
         $greetings[] = "Greetings";
         
         foreach ($greetings as $greeting) {
-            echo $greeting;
+            echo '<br />' . $greeting;
         }
 
         //count number of elements in an array
-        echo count($names);
+        echo '<br />' . count($names);
 
         //Associative Arrays (key => value)
         $people = array(
@@ -209,7 +209,7 @@
 
         //check, if the array key exists
         if (array_key_exists('David', $people)){
-            echo $people['David'];
+            echo '<br />' . $people['David'];
         };
 
         //2-dimensional associative array
@@ -250,9 +250,9 @@
             "John"=>"42"
         );
         extract($people);
-        echo $David; //returns 27
-        echo $Amy; //returns 21
-        echo $John; //returns 42
+        echo '<br />' . $David; //returns 27
+        echo '<br />' . $Amy; //returns 21
+        echo '<br />' . $John; //returns 42
 
         /*compact()
           • does the opposite of compact()
@@ -268,7 +268,31 @@
 
         echo '<br />Last array key is: ' . array_key_last($result);
 
-        // ---- Conditions ----
+        /*array_map
+          • Applies a given callback function to each element of an array and returns a new array with the modified values.
+        */
+        $numbers = [1, 2, 3, 4, 5];
+        function double($n) {
+        return $n * 2;
+        }
+        // Apply the "double" function to each element of the array
+        $doubled_numbers = array_map("double", $numbers);
+        echo '<br />Here are doubled numbers from an array:';
+        print_r($doubled_numbers);
+
+        //Sum of numbers in array
+        $sum = array_sum($numbers);
+        echo '<br />Sum of numbers in the array is: ' . $sum;
+
+        //Extract column from 2D array
+        $people = array(
+            array('id' => 1, 'name' => 'John', 'age' => 32),
+            array('id' => 2, 'name' => 'Jane', 'age' => 28)
+        );
+        $names = array_column($people, 'name');
+        print_r($names);
+
+        // ------------ Conditions ------------
         //if, else
         $x = 10;
         $y = 20;
@@ -322,7 +346,7 @@
                  echo " Invalid day. ";
         }
 
-        // ---- Loops ----
+        // ------------ Loops ------------
         //while
         $i = 1;
         while ($i < 7) {
@@ -372,7 +396,7 @@
             echo $i . ' ';
         }
 
-        // ---- Functions ----
+        // ------------ Functions ------------
         //named function        
         function sayHello() {
             echo "Hello!";
@@ -414,7 +438,7 @@
     
         echo multiplicate(8, 3);
 
-        /*Anonymous function (=closure) (=lambda function)
+        /* ------------ Anonymous function (=closure) (=lambda function) ------------
           • For defining a small piece of functionality that will be used only once, and you don't want to define a separate named function for it. 
           • It helps to quickly adjust the function in-place, no need to jump to the function in other place in the code.
           • When used as a parameter that goes into another function, $fn is often used for that.
@@ -427,7 +451,44 @@
         $greet('World');
         $greet('PHP');
 
-        /* ---- Predefined variables (superglobals) ----
+        /*Use
+          • part of the Closure syntax
+          • makes the specified variables of the outer scope available inside the closure.
+          • used only with anonymous functions
+        */
+        $outerVariable = 42;
+        $one = function () {
+            // can't access $outerVariable in here
+        };
+        $two = function () use ($outerVariable) {
+            // $outerVariable is made available in here
+            echo '<br />$outerVariable = ' . $outerVariable; // 42
+        };
+
+        /*Variadic parameter
+          • When we want to pass parameters but we do not know how many.
+        */
+        function numbers(...$params){
+            //all parameters will be collected together into an array
+            echo '<br />Variadic parameters listed:';
+            foreach($params as $param) {
+                echo '<br />' . $param;
+            }
+        }
+        numbers(10, 100, 1000);
+
+        /* Arrow functions
+           • = more concise syntax for anonymous functions
+           • using variables from the parent scope is always automatic
+        */
+        // Anonymous function
+        $add = function($a) use ($b) {
+            return $a + $b;
+        };
+        // Arrow function
+        $add = fn($a, $b) => $a + $b;
+
+        /* ------------ Predefined variables (superglobals) ------------
           • superglobals are predefined variables that are always accessible, regardless of scope.
         */ 
 
@@ -524,7 +585,7 @@
 
            • the problem is, the user can insert for example a JS tag like <script>alert("hi")</script>
              (principle: The user is guilty until proven innocent.)
-             • we cane sanitize the data on input OR
+             • we can sanitize the data on input OR
              • we can escape the data in the output (e.g. with htmlspecialchars())
 
            • validate the input data
@@ -563,16 +624,19 @@
         • modern short form (PHP 8) (null coalescing operator): */
         echo "Your income: " . ($_GET["income"] ?? "Empty input") . "<br />";
         echo "Your IQ: " . ($_GET["iq"] ?? "Empty input");
+
+        //Null coalescing operator ??
+        $var1 = null;
+        $var2 = "Coalesced2";
+        $var3 = "Coalesced3";
+        echo '<br />';
+        echo $var1 ?? $var2 ?? $var3; // Outputs "Coalesced2"
     ?>
     <?php
         /* $_SESSION (see beginning of this file)
         */
         echo "<br />Session color: " . $_SESSION['color'];
         echo "<br />Session name: " . $_SESSION['name'];
-        //remove all session variables
-        session_unset();
-        //end of all sessions, destroys the session's data on the server, use at the end of the script
-        session_destroy();
 
         /*Regenerate the session ID
           • defense again attacks that could spoof the old session ID
@@ -580,7 +644,12 @@
         */
         session_regenerate_id(true); //true = deletes the old session ID
 
-        /* ----- COOKIES ----
+        //remove all session variables
+        session_unset();
+        //end of all sessions, destroys the session's data on the server, use at the end of the script
+        session_destroy();
+
+        /* ------------- COOKIES ------------
            • used to identify the user
            • cookie = small file on the user's computer
            • Each time the same computer requests a page through a browser, it will send the cookie, too.
@@ -604,11 +673,11 @@
         $params = session_get_cookie_params();
         setcookie('PHPSESSID', '', time() - 3600, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
 
-        // ---- Magic constants ----
+        // ------------ Magic constants ------------
         echo '<br />Magic constant __DIR__: ' . __DIR__; //directory of the current file.
         // go up in path: /../path/to/file
 
-        // ---- Creating/opening a file ----
+        // ------------ Creating/opening a file ------------
         $my_file = fopen("src/file.txt", "w");
         /* r: Opens file for read only.
            w: Opens file for write only. Erases the contents of the file or creates a new file if it doesn't exist.
@@ -647,7 +716,7 @@
             echo $line .", ";
         }
 
-        /* ---- DATABASES ----
+        /* ------------ DATABASES ------------
            • PDO = PHP Data Objects 
            • in real life, use 
 
@@ -715,9 +784,10 @@
             echo $post['title']. "<br />";
         }
 
-        // ---- OOP ----
+        // ------------ OOP ------------
         class Person {
             public $age; //property (member variable)
+            public readonly int $number; //Read-only property (must be typed property) (can be set only once in this class)
 
             public function speak() { //method
               echo "Hi!";
@@ -846,7 +916,12 @@
         $obj = new Apple();
         $obj->eat();
 
-        /* ---- Static ----
+        /*ReflectionClass
+          • Built-in class that provides a way to retrieve information about a class and its properties, methods, and constants at runtime.
+          • part of the Reflection API
+        */
+
+        /* ------------ Static ------------
           • Static property/method of a class can be accessed without creating an object from that class.
           • Accessed by using the scope resolution operator :: between the class name and the property/method name.
           • Objects of a class cannot access static properties in the class but they can access static methods.
@@ -879,7 +954,7 @@
         $instance = new $classObj();
         $instance->myMethod();
 
-        /* ---- Final ----
+        /* ------------ Final ------------
           • final methods cannot be overridden in child classes
           • final classes cannot be inherited
           • properties cannot be marked final
@@ -905,19 +980,19 @@
         }
         */
 
-        /* ---- Singletons ----
+        /* ------------ Singletons ------------
            • This is not true singleton but they call it so in Laracasts PHP for Beginners>35 video. They call it like App::setContainer($container). Maybe they name it so, because
              they intend to call it just once? Or they plan to add proper singleton multiple instantiation prevention later?
         */
         class App {
-            protected static $container;
+            protected static $container;           
 
             public static function setContainer($container){
                 static::$container = $container;
             }
         }
 
-        // ---- HTTP ----
+        // ------------ HTTP ------------
         //Get response code
         //http_response_code();
 
@@ -935,7 +1010,7 @@
         
         echo http_build_query($array, '', '&');
 
-        /* ---- Fluent interface ----
+        /* ------------ Fluent interface ------------
            • allows to chain method calls
            • instead of 
              $object->function1();
@@ -957,11 +1032,12 @@
         $myObject = new MyNiceClass();
         $myObject->myFunction()->anotherFunction();
 
-        /* ---- Automatically load class from a file ----
+        /* ------------ Automatically load class from a file ------------
           • automatically loads class files on demand
           • we can use it at the beginning of our app, it is triggered every time, when we are using a class name, that not manually included in our app
           • used in big apps, so we do not need to include classes manually by "include", we simply make a file for each class and include classes automatically.
           • we can also register classes from 3rd party libraries, that have class files in other places than the main app
+          • in real life, we would not use spl_autoload_register() but composer autoloader
 
         /*This is a generic code that will trigger only after using a class name not included in our app
           We do not know yet what the classes' names will be, so we use just $class_name*/         
@@ -972,13 +1048,18 @@
         $interestingObject = new ClassToBeAutoload();
         $interestingObject->Scream();
 
-        /* ---- Namespaces ----
+        /* Composer autoloading:
+           • require 'vendor/autoload.php';
+        */
+
+        /* ------------ Namespaces ------------
         • help to organize code
         • Similar logic to a folder (group of scripts). It is a convention to use namespace in a folder with the same name, so effectively namespace=folder.
         • When we use something from this namespace: Core\CoreClass
         */
         require 'Core/CoreFunctionality.php';
 
+        //This pulls the classes/functions from the namespace (not from a specific file)
         Core\coreFunction();
         $coreClass = new Core\CoreClass();
         $coreClass->greetings();
@@ -990,7 +1071,7 @@
         $coreClass = new CoreClass();    //now we do not need to add \Core
         */
 
-        // ---- Working with Text ----
+        // ------------ Working with Text ------------
         $myString = '<br />World! Hello World!';
         //Replace 'World' with 'REPLACED' in $myString (all occurrences)
         $myString = str_replace('World', 'REPLACED', $myString);
@@ -1010,10 +1091,10 @@
             echo '<br />Password is verified!';
         }
 
-        // ---- Predefined Constants ----
+        // ------------ Predefined Constants ------------
         echo '<br />Directory separator in your system is: ' . DIRECTORY_SEPARATOR;
 
-        // ---- HTTP Headers ----
+        // ------------ HTTP Headers ------------
         //list of headers as array
         $headers = headers_list();
         echo '<br /><br /><strong>Here are all HTTP headers sent by the server:</strong><br />';
@@ -1021,7 +1102,7 @@
             echo $header . "<br>";
         }
 
-        // ---- Error Handling ----
+        // ------------ Error Handling ------------
         function divideOneByX($x) {
             if ($x===0) {
                 //Throw - will throw an Uncaught Exception with line number
@@ -1031,22 +1112,25 @@
         }
         echo '<br />' . divideOneByX(5); //try 0 here
 
+        //Try-catch block
+        try {
+            $result = 10 / 0;
+        } catch (DivisionByZeroError $e) {
+            echo "<br />Error: " . $e->getMessage();
+        }
 
-
-
-
-
-
-
-        
-
-        
-
-
-
+        // ------------ Casting ------------
+        //cast to boolean
+        var_dump((bool) "");        // false
+        var_dump((bool) "0");       // false
+        var_dump((bool) 1);         // true
+        var_dump((bool) -2);        // true
+        var_dump((bool) "foo");     // true
+        var_dump((bool) 2.3e5);     // true
+        var_dump((bool) array(12)); // true
+        var_dump((bool) array());   // false
+        var_dump((bool) "false");   // true
 
     ?>
-
-
     </body>
 </html>

@@ -1,0 +1,25 @@
+{
+    "name": "lukastomek/demo",
+    "authors": [
+        {
+            "name": "Lukáš Tomek",
+            "email": "tomekluke@gmail.com"
+        }
+    ],
+    "require": {
+        "illuminate/collections": "^10.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "Core\\": "Core/"
+        }
+    },
+    "require-dev": {
+        "pestphp/pest": "^2.6"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
