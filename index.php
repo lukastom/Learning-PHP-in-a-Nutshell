@@ -856,11 +856,34 @@
 
         /*Visibility keywords
           • public - accessible from anywhere
-          • protected - accessible only within the class itself, by inheriting, and by parent classes
+          • protected - accessible only by the class + by child and parent classes
           • private - accessible only by the class
 
           • methods without a visibility keyword are public
         */
+
+        /*How to break "private" keyword - never use this.
+          It just demonstrates that the visibility keywords signal intention. It is not absolute barrier.
+        */
+        class Man {
+            private function privateMethod (){
+                return 'A secret thing.';
+            }
+        }       
+        $method = new ReflectionMethod(Man::class, 'privateMethod');
+        $method->setAccessible(true);
+        $man = new Man();
+        echo $method->invoke($man);
+
+        /**DocBlock comments
+         * • used with PHPDocumentor to automatically generate documentation from code comments
+         */
+        class TennisMatch {
+            //DocBlock comment + annotation to indicate that this is part of the public API of the class (it is not part of PHP, just convention)
+            /** @api */
+            public function score() {
+            }
+        }
 
         /*Interface
           • An interface specifies a list of methods that a class must implement.
@@ -900,6 +923,7 @@
          abstract class Fruit { 
             private $color; 
             
+            //abstract method without implementation
             abstract public function eat(); 
             
             public function setColor($c) { 
@@ -920,6 +944,101 @@
           • Built-in class that provides a way to retrieve information about a class and its properties, methods, and constants at runtime.
           • part of the Reflection API
         */
+        //class short name (without namespace)
+        $shortName = (new ReflectionClass('DateTime'))->getShortName();
+        echo('<br />Short name of the class is: ' . $shortName);
+        //class fully qualified name (with namespace)
+        $className = (new ReflectionClass('DateTime'))->getName();
+        echo('<br />Fully qualified name of the class is: ' . $className);
+
+        /*"Duck typing" vs "type hinting"
+          • "duck typing" = dynamic typing that is used to determine an object's type based on its behavior, rather than its class or interface.
+          • Typically, when a function parameter is "type hinted", the specified data type must be used when calling the function.
+            However, with "duck typing", the data type of the parameter is not explicitly specified, but instead determined by the behavior
+            of the object passed to the function.
+        */
+        function makeSound($object) { //Hint typing would be function makeSound(Duck $object)
+            $object->quack();
+        }
+        
+        class Duck {
+            public function quack() {
+                echo "<br />Quack!";
+            }
+        }
+        
+        class HumanPerson {
+            public function quack() {
+                echo "<br />I can't quack!";
+            }
+        }
+        
+        $duck = new Duck();
+        $person = new HumanPerson();
+        
+        makeSound($duck); // Outputs "Quack!"
+        makeSound($person); // Outputs "I can't quack!"
+
+        /*Type hints
+          • we can use array, callable, class, bool, float, int, string, ...
+        */
+        function add(int $x, int $y) {
+            return $x + $y;
+        }
+        //specify return value ": int"
+        function addIt(int $x, int $y): int
+        {
+            return $x + $y;
+        }
+        //specify no return value
+        function dd($data):void
+        {
+            echo '<pre>';
+            var_dump($data);
+            echo '</pre>';
+            die;
+        }
+        //Union type - if it can return more types
+        function multiplyTwo($x, $y): int | float
+        {
+            return $x * $y;
+        }
+        //"mixed" = object|resource|array|string|int|float|bool|null
+        //"?" = make it nullable (value of "null" can be passed)
+        function upper(?string $str): string
+        {
+            return strtoupper($str);
+        }
+
+        /*Strict typing
+          • if you want to prevent automatic conversion of types, use this at the beginning of the script: declare(strict_types=1);
+            (That does not work if it is in included file.)
+        */
+
+        /* Value objects
+           • example: instead of $age = 25, we use $age = new Age(25)
+           • we actually made our new new type (e.g. instead of integer, we use Age)
+           • validation and value equality can be addressed
+        */   
+        class Age {
+            private $age;
+        
+            public function __construct($age) {
+                if (!is_int($age) || $age < 0) {
+                    throw new InvalidArgumentException('Age must be a non-negative integer.');
+                }
+                $this->age = $age;
+            }
+        
+            public function getValue() {
+                return $this->age;
+            }
+        
+            public function equals(Age $otherAge) {
+                return $this->age === $otherAge->getValue();
+            }
+        }
+
 
         /* ------------ Static ------------
           • Static property/method of a class can be accessed without creating an object from that class.
@@ -1090,6 +1209,20 @@
         if ($passwordVerified) {
             echo '<br />Password is verified!';
         }
+
+        //Replace string using regular expression
+        $string = "String To Be Replaced.";
+        //the first parameter is the regular expression (replace all uppercase characters with X)
+        $new_string = preg_replace('/[A-Z]/', 'X', $string);
+        echo '<br />String adjusted using regex: ' . $new_string;
+
+        //Trimming spaces
+        $string = ' with spaces ';
+        $new_string = trim($string);
+
+        //Uppercase to lowercase
+        $string = 'UPPERCASE STRING';
+        $new_string = strtolower($string);
 
         // ------------ Predefined Constants ------------
         echo '<br />Directory separator in your system is: ' . DIRECTORY_SEPARATOR;
