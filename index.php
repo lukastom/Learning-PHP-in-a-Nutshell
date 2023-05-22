@@ -3,7 +3,7 @@
        //Redirect and exit
        header("Location: http://www.google.com/");
        exit;
-    */  
+    */
 
     //Setting namespaces
     use Core\CoreClass;
@@ -33,7 +33,7 @@
         // Uncomment to see your PHP and xdebug configuration. Xdebug is a PHP extension needed for debugging your app.
         //phpinfo();
         //echo xdebug_info();
-        
+
         /* ------------ Include, require ------------
            = insertion of the content of one PHP file into another PHP file, before the server executes our script.
            • absolute or relative path to the file
@@ -188,7 +188,7 @@
         $greetings[] = "Hello";
         $greetings[] = "Hi";
         $greetings[] = "Greetings";
-        
+
         foreach ($greetings as $greeting) {
             echo '<br />' . $greeting;
         }
@@ -237,7 +237,7 @@
         //var_dump – dumps information about a variable. <pre> keeps the formatting as it occurs in plain text. Some settings are in xdebug.
         var_dump($new_array);
         echo '</pre>';
-        //Ending the script after we got the variable dump         
+        //Ending the script after we got the variable dump
         //die();
         //exit("End of script");
 
@@ -328,7 +328,7 @@
             echo " Child";
         else
             echo " Adult";
-        
+
         //switch
         //note: fall through mechanism applies (after a case is true, it runs until the next break)
         $today = 'Tue';
@@ -375,7 +375,7 @@
         $names_array = array("John"=>23, "David"=>25, "Amy"=>18);
         foreach ($names_array as $name => $value) {
             echo $name. " " .$value. '<br />';
-        } 
+        }
 
         //useful syntax for more complicated HTML inside
         $names_array = array("John", "David", "Amy");
@@ -397,11 +397,11 @@
         }
 
         // ------------ Functions ------------
-        //named function        
+        //named function
         function sayHello() {
             echo "Hello!";
         }
-    
+
         sayHello(); //call the function
 
         //function with a parameter
@@ -429,17 +429,17 @@
 
         /*return
           • if there is no return in function, the result will be NULL
-          • if we want to return more values, we can use e.g. array 
+          • if we want to return more values, we can use e.g. array
         */
         function multiplicate($num1, $num2) {
             $res = $num1 * $num2;
             return $res;
         }
-    
+
         echo multiplicate(8, 3);
 
         /* ------------ Anonymous function (=closure) (=lambda function) ------------
-          • For defining a small piece of functionality that will be used only once, and you don't want to define a separate named function for it. 
+          • For defining a small piece of functionality that will be used only once, and you don't want to define a separate named function for it.
           • It helps to quickly adjust the function in-place, no need to jump to the function in other place in the code.
           • When used as a parameter that goes into another function, $fn is often used for that.
         */
@@ -447,7 +447,7 @@
             echo("<br />Hello " . $name);
         };
         //PHP automatically converts this into instance of the Closure internal class. So, $greet is now an object.
-        
+
         $greet('World');
         $greet('PHP');
 
@@ -490,7 +490,7 @@
 
         /* ------------ Predefined variables (superglobals) ------------
           • superglobals are predefined variables that are always accessible, regardless of scope.
-        */ 
+        */
 
         // $_SERVER
         echo "<br /><br />";
@@ -506,7 +506,7 @@
         echo "<br />";
         echo "<strong>Info. protocol name+revision: </strong>" . $_SERVER['SERVER_PROTOCOL'];	//name and revision of the information protocol (such as HTTP/1.1)
         echo "<br />";
-        //REQUEST_METHOD - to detect e.g. if we got data from a form 
+        //REQUEST_METHOD - to detect e.g. if we got data from a form
         echo "<strong>Request method: </strong>" .               $_SERVER['REQUEST_METHOD'];	//request method used to access the page (such as POST)
         echo "<br />";
         echo "<strong>Request timestamp: </strong>" .            $_SERVER['REQUEST_TIME'];	//timestamp of the start of the request (such as 1377687496)
@@ -551,7 +551,7 @@
         foreach ($_SERVER as $key => $value){
             //for argv, argc (arguments passed to script if run from command line)
             if(is_array($value)){
-                $value = implode(",", $value);             
+                $value = implode(",", $value);
             }
 
             echo $key." : ".$value."<br>";
@@ -562,19 +562,19 @@
         var_dump(
             parse_url($_SERVER['REQUEST_URI'])
         );
-        
+
         /* $GLOBALS
         */
-        
+
         /* $_REQUEST
         */
-              
+
         /* $_FILES
         */
-        
+
         /* $_ENV
         */
-        
+
         /* $_POST
            • in body of HTTP request
            • no limit in amount of data, supports multipart binary files
@@ -595,7 +595,7 @@
              • trim it (trim())
              • validate e-mail address string: filter_var('bob@example.com', FILTER_VALIDATE_EMAIL)
         */
-     
+
     ?>
     <!-- form - action is a php page, that runs after the form is submitted (without action set, it runs itself) -->
     <form action="index.php" method="post">
@@ -604,8 +604,8 @@
         <p>Age: <input type="text" name="age" /></p>
         <p><input type="submit" name="submit" value="Submit" /></p>
     </form>
-    <?php    
-        //escaping the data in the output    
+    <?php
+        //escaping the data in the output
         echo "Your name: " . htmlspecialchars($_POST["name"] ?? "") . "<br />";
         echo "Your age: " . ($_POST["age"] ?? "");
     ?>
@@ -616,7 +616,7 @@
         <p>IQ: <input type="text" name="iq" value="<?= $_GET["iq"] ?? "" ?>" /></p>
         <p><input type="submit" name="submit" value="Submit" /></p>
     </form>
-    <?php        
+    <?php
         /*
         • long form:
           echo "Your income: " . (isset($_GET["income"]) ? $_GET["income"] : "Empty input") . "<br />";
@@ -668,7 +668,7 @@
         if(isset($_COOKIE['user'])) {   //isset() - checks if the variable is declared and not null
             echo "<br />Value of the cookie is: ". $_COOKIE['user'];
           }
-        
+
         //delete the cookie in the browser
         $params = session_get_cookie_params();
         setcookie('PHPSESSID', '', time() - 3600, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
@@ -686,7 +686,7 @@
            r+: Opens file for read/write.
            w+: Opens file for read/write. Erases the contents of the file or creates a new file if it doesn't exist.
            a+: Opens file for read/write. Creates a new file if the file doesn't exist
-           x+: Creates new file for read/write.          
+           x+: Creates new file for read/write.
         */
 
         //returns file pointer resource (reference to an open file) or false if the file could not be opened or created
@@ -716,9 +716,15 @@
             echo $line .", ";
         }
 
+        //get contents of a file as a string
+        file_get_contents('src/file.txt');
+
+        //check if the file exists
+        file_exists('src/file.txt');
+
         /* ------------ DATABASES ------------
-           • PDO = PHP Data Objects 
-           • in real life, use 
+           • PDO = PHP Data Objects
+           • in real life, use
 
           Initialize PDO - create new object from PDO class + connect to db
           • $dsn = Data Source Name (a string with connection settings)
@@ -743,7 +749,7 @@
         */
 
         //Testing, if $pdo object exists or the variable is null
-        if ($pdo) {    
+        if ($pdo) {
             //Prepare SQL query
             $statement = $pdo->prepare("SELECT * FROM posts");
             //Execute SQL query
@@ -770,7 +776,7 @@
             • ->fetchAll() method gives everything twice (indexed version and key version)
                 • PDO::FETCH_ASSOC gives us associative array (everything just once)
             */
-            $posts = $statement->fetchAll(PDO::FETCH_ASSOC);    
+            $posts = $statement->fetchAll(PDO::FETCH_ASSOC);
 
             echo "<br /><strong>Titles in my database:</strong><br />";
             foreach ($posts as $post) {
@@ -800,7 +806,7 @@
 
         //access the object's properties (object operator -> instead of . in Java)
         $person->age = 23;  //note missing $ before age (age is not a variable but object property)
-        echo $person->age; 
+        echo $person->age;
         $person->speak();
 
         /*Constructor
@@ -850,7 +856,7 @@
                 echo "Woof!";
             }
         }
-        
+
         $dog = new Dog("Fox",5);
         $dog->woof();
 
@@ -869,7 +875,7 @@
             private function privateMethod (){
                 return 'A secret thing.';
             }
-        }       
+        }
         $method = new ReflectionMethod(Man::class, 'privateMethod');
         $method->setAccessible(true);
         $man = new Man();
@@ -889,13 +895,13 @@
           • An interface specifies a list of methods that a class must implement.
           • These methods must be public.
           • The interface does not contain implementations.
-          • Class can implement multiple interfaces (separate with ,) (ex.: class X implements A, B {}) 
+          • Class can implement multiple interfaces (separate with ,) (ex.: class X implements A, B {})
         */
-        
+
         interface AnimalInterface {
             public function makeSound();
         }
-        
+
         class MyDog implements AnimalInterface {
             public function makeSound() {
                 echo "Woof! <br />";
@@ -906,10 +912,10 @@
                 echo "Meow! <br />";
             }
         }
-        
+
         $myObj1 = new MyDog();
         $myObj1->makeSound();
-        
+
         $myObj2 = new MyCat();
         $myObj2->makeSound();
 
@@ -920,23 +926,23 @@
           • Subclass must implement all the abstract methods.
           • is-a relationship (Apple IS A Fruit)
          */
-         abstract class Fruit { 
-            private $color; 
-            
+         abstract class Fruit {
+            private $color;
+
             //abstract method without implementation
-            abstract public function eat(); 
-            
-            public function setColor($c) { 
-                $this->color = $c; 
-            } 
-        } 
-        
+            abstract public function eat();
+
+            public function setColor($c) {
+                $this->color = $c;
+            }
+        }
+
         class Apple extends Fruit {
             public function eat() {
                 echo "Eating... Yummy!";
             }
         }
-        
+
         $obj = new Apple();
         $obj->eat();
 
@@ -960,22 +966,22 @@
         function makeSound($object) { //Hint typing would be function makeSound(Duck $object)
             $object->quack();
         }
-        
+
         class Duck {
             public function quack() {
                 echo "<br />Quack!";
             }
         }
-        
+
         class HumanPerson {
             public function quack() {
                 echo "<br />I can't quack!";
             }
         }
-        
+
         $duck = new Duck();
         $person = new HumanPerson();
-        
+
         makeSound($duck); // Outputs "Quack!"
         makeSound($person); // Outputs "I can't quack!"
 
@@ -1019,21 +1025,21 @@
            • example: instead of $age = 25, we use $age = new Age(25)
            • we actually made our new new type (e.g. instead of integer, we use Age)
            • validation and value equality can be addressed
-        */   
+        */
         class Age {
             private $age;
-        
+
             public function __construct($age) {
                 if (!is_int($age) || $age < 0) {
                     throw new InvalidArgumentException('Age must be a non-negative integer.');
                 }
                 $this->age = $age;
             }
-        
+
             public function getValue() {
                 return $this->age;
             }
-        
+
             public function equals(Age $otherAge) {
                 return $this->age === $otherAge->getValue();
             }
@@ -1057,11 +1063,11 @@
                   but "static::" will refer to $myStaticProperty in the child class that currently runs (myClassChild)*/
                 echo '<br />' . static::$myStaticProperty;
             }
-         } 
+         }
         echo MyClass::$myStaticProperty;
         echo MyClass::SOME_CONST;
 
-        // Get class in a static way 
+        // Get class in a static way
         class MyClassHi {
             public function myMethod() {
               echo "Hello, world!";
@@ -1093,7 +1099,7 @@
         */
 
         final class myFinalClass {
-        }       
+        }
         /*(this is not allowed)
         class myClass extends myFinalClass {
         }
@@ -1104,7 +1110,7 @@
              they intend to call it just once? Or they plan to add proper singleton multiple instantiation prevention later?
         */
         class App {
-            protected static $container;           
+            protected static $container;
 
             public static function setContainer($container){
                 static::$container = $container;
@@ -1126,12 +1132,12 @@
             'null' => null,
             'php' => 'hypertext processor'
         );
-        
+
         echo http_build_query($array, '', '&');
 
         /* ------------ Fluent interface ------------
            • allows to chain method calls
-           • instead of 
+           • instead of
              $object->function1();
              $object->function2();
              $object->function3();
@@ -1144,7 +1150,7 @@
                //returning the object itself
                return $this;
             }
-            public function anotherFunction() {   
+            public function anotherFunction() {
             }
         }
 
@@ -1159,7 +1165,7 @@
           • in real life, we would not use spl_autoload_register() but composer autoloader
 
         /*This is a generic code that will trigger only after using a class name not included in our app
-          We do not know yet what the classes' names will be, so we use just $class_name*/         
+          We do not know yet what the classes' names will be, so we use just $class_name*/
         spl_autoload_register(function ($class_name) {
             include 'src/' . $class_name . '.php';
         });
@@ -1185,7 +1191,7 @@
 
         /*alternative syntax
         use Core;  //put this at the beginning of your script. Warning: this means that it will try to find every single class in this namespace. Solution:
-           a) if we want call something not from the namespace, we can call it from root like e.g. \PDO 
+           a) if we want call something not from the namespace, we can call it from root like e.g. \PDO
            b) we can place use PDO; at the beginning of the script (and all classes we want to use)
         $coreClass = new CoreClass();    //now we do not need to add \Core
         */
@@ -1250,6 +1256,34 @@
             $result = 10 / 0;
         } catch (DivisionByZeroError $e) {
             echo "<br />Error: " . $e->getMessage();
+        }
+
+        /* Custom exception
+           • 0) create it, 1) throw it, 2) try-catch it
+        */
+        class CustomException extends Exception {
+            protected $message = 'Cannot divide by zero.';
+            /*
+            public static function specificException() {
+                return new CustomException('Can not do some specific thing.');
+            }
+            */
+        }
+        // Create a function that may throw an exception
+        function divide($dividend, $divisor) {
+        if ($divisor == 0) {
+            throw new CustomException;
+            //or throw new CustomException('Cannot divide by zero.'); if the message is not specified in CustomException class
+            //or throw new CustomException::specificException; if we add static function and static return to the CustomException class
+        }
+        return $dividend / $divisor;
+        }
+        // Call the function and handle the exception
+        try {
+            $result = divide(10, 0);
+            echo "The result is: $result";
+        } catch (CustomException $e) {
+            echo "Error: " . $e->getMessage();
         }
 
         // ------------ Casting ------------
