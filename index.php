@@ -273,7 +273,7 @@
         */
         $numbers = [1, 2, 3, 4, 5];
         function double($n) {
-        return $n * 2;
+            return $n * 2;
         }
         // Apply the "double" function to each element of the array
         $doubled_numbers = array_map("double", $numbers);
@@ -1229,6 +1229,12 @@
         //Uppercase to lowercase
         $string = 'UPPERCASE STRING';
         $new_string = strtolower($string);
+
+        //Capitalize the first character of each word
+        $string = "hello world";
+        $capitalizedString = ucwords($string); //UC = uppercase words
+        echo $capitalizedString; //Hello World
+
 
         // ------------ Predefined Constants ------------
         echo '<br />Directory separator in your system is: ' . DIRECTORY_SEPARATOR;
