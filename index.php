@@ -82,6 +82,10 @@
         echo "<br /> Name: {$name}, age: {$_age}. ";
         //When using ' it will not parse the variable but treat it as a string
         echo '<br /> Name: $name, age: $_age. ';
+        // .= operator
+        $string = "Hello";
+        $string .= " World!";
+        echo $string; //Hello World!
 
         /* ------------ Constants ------------
            define(name, value, case-insensitive)
