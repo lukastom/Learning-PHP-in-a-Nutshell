@@ -555,6 +555,7 @@
         foreach ($_SERVER as $key => $value){
             //for argv, argc (arguments passed to script if run from command line)
             if(is_array($value)){
+                //implode() - join elements of an array into a single string, using a specified delimiter.
                 $value = implode(",", $value);
             }
 
