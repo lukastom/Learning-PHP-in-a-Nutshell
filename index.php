@@ -636,6 +636,13 @@
         $var3 = "Coalesced3";
         echo '<br />';
         echo $var1 ?? $var2 ?? $var3; // Outputs "Coalesced2"
+
+        /*null coalescing assignment operator ??=
+          • used to assign a value to a variable if the variable is null
+        */
+        $myVariable = null;
+        $myVariable ??= "Default Value";  //if $myVariable is null, assign "Default Value", otherwise do nothing
+        echo $myVariable;
     ?>
     <?php
         /* $_SESSION (see beginning of this file)
