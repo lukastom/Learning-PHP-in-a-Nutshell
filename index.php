@@ -431,6 +431,14 @@
         setCounter(42);  //Counter is 42
         setCounter();  //Counter is 10
 
+        /*Static typing
+          • static typing means that you can't change the type of a variable
+          • if a wrong type is passed, it will throw a "Type error"
+        */
+        function addNumbers(int $a, int $b): int {
+            return $a + $b;
+        }
+
         /*return
           • if there is no return in function, the result will be NULL
           • if we want to return more values, we can use e.g. array
@@ -439,8 +447,14 @@
             $res = $num1 * $num2;
             return $res;
         }
-
         echo multiplicate(8, 3);
+
+        //return type (here it is an array)
+        function getNumbers(): array {
+            return [1, 2, 3, 4, 5];
+        }
+        $numbers = getNumbers();
+        print_r($numbers);
 
         /* ------------ Anonymous function (=closure) (=lambda function) ------------
           • For defining a small piece of functionality that will be used only once, and you don't want to define a separate named function for it.
