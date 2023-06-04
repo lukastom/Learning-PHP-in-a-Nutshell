@@ -643,6 +643,29 @@
         $myVariable = null;
         $myVariable ??= "Default Value";  //if $myVariable is null, assign "Default Value", otherwise do nothing
         echo $myVariable;
+
+        /*null safe operator ?->
+          • for cases where an object could be null
+          • if the object here ($person) is null, it does this:
+            1) it skips the rest of the expression
+            2) returns null
+            3) it will not throw an exception
+        */
+        $person = null; //creating a null object
+        $name = $person?->name;
+        echo $name ?? "No name available.";
+
+        /* indicate that a parameter can accept either a specific type or be null */
+        function printNumber(?int $num) {
+            if ($num !== null) {
+            echo "The number is: " . $num;
+            } else {
+            echo "No number provided.";
+            }
+        }
+        printNumber(42); // Output: The number is: 42
+        printNumber(null); // Output: No number provided.
+
     ?>
     <?php
         /* $_SESSION (see beginning of this file)
