@@ -112,6 +112,9 @@
         $number = $number + $number_string;
         echo '<br />' . $number;
 
+        //conversion to integer
+        echo intval(4.2);  // returns 4
+
         /*Variables Scope
           local = declared in a function, can be accessed only within the function
           global = declared outside a function, can be accessed only outside the function (unless we use "global" command)
@@ -295,6 +298,15 @@
         );
         $names = array_column($people, 'name');
         print_r($names);
+
+        //Merging arrays
+        $array1 = [1, 2, 3];
+        $array2 = [4, 5, 6];
+        $array3 = [7, 8, 9];
+        $result = array_merge($array1, $array2, $array3);
+
+        //generate a sequence of numbers
+        $numbers = range(1, 3);  //returns an array with numbers 1, 2, 3
 
         // ------------ Conditions ------------
         //if, else
@@ -570,6 +582,7 @@
             //for argv, argc (arguments passed to script if run from command line)
             if(is_array($value)){
                 //implode() - join elements of an array into a single string, using a specified delimiter.
+                //(For splitting string, explode() or preg_split() is used)
                 $value = implode(",", $value);
             }
 
@@ -1284,6 +1297,19 @@
         $capitalizedString = ucwords($string); //UC = uppercase words
         echo $capitalizedString; //Hello World
 
+        //heredoc - the same as a text between " ". Preserves line breaks.
+        $str = <<<EOT
+            This is a heredoc string.
+            It can span multiple lines without needing escape characters.
+            Variables can be used within the string, like this: $variable.
+        EOT;
+
+        //nowdoc - the same as a text between ' '. Preserves line breaks.
+        $str = <<<'EOD'
+            This is a nowdoc string.
+            It can span multiple lines without needing escape characters.
+        EOD;
+        //Instead EOT (end of text/template) or EOD (end of data/document) we can use any identifier
 
         // ------------ Predefined Constants ------------
         echo '<br />Directory separator in your system is: ' . DIRECTORY_SEPARATOR;
